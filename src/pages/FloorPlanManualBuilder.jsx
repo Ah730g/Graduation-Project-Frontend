@@ -3,7 +3,7 @@ import AxiosClient from "../AxiosClient";
 import FloorPlanSVG from "./FloorPlanSVG";
 import FloorPlanEditor from "./FloorPlanEditor";
 import FloorPlan3D from "../components/floorplan/FloorPlan3D";
-import { convert2DTo3D } from "../lib/floorplan3d/converter";
+import { convert2DTo3D } from "../Lib/floorplan3d/converter";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
 export default function FloorPlanManualBuilder({ onFloorPlanCreated = null }) {

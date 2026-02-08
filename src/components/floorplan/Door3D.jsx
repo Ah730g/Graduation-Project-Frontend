@@ -1,5 +1,5 @@
 import React from 'react';
-import { createDoorMaterial } from '../../lib/floorplan3d/materials';
+import { createDoorMaterial } from '../../Lib/floorplan3d/materials';
 
 export default function Door3D({ position, size, rotation }) {
   const material = createDoorMaterial();

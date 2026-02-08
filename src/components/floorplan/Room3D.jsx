@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { Html } from '@react-three/drei';
 import * as THREE from 'three';
-import { createFloorMaterial, createInternalWallMaterial, createExternalWallMaterial } from '../../lib/floorplan3d/materials';
+import { createFloorMaterial, createInternalWallMaterial, createExternalWallMaterial } from '../../Lib/floorplan3d/materials';
 import Wall3D from './Wall3D';
 import Furniture3D from './Furniture3D';
 import Window3D from './Window3D';

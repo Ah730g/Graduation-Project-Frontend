@@ -1,8 +1,8 @@
 import React, { useMemo, Suspense, Component } from 'react';
 import * as THREE from 'three';
-import { createFurnitureMaterial } from '../../lib/floorplan3d/materials';
-import { useFurnitureModel, FURNITURE_MODELS } from '../../lib/floorplan3d/modelLoader';
-import { PrimitiveFurniture } from '../../lib/floorplan3d/primitiveFurniture';
+import { createFurnitureMaterial } from '../../Lib/floorplan3d/materials';
+import { useFurnitureModel, FURNITURE_MODELS } from '../../Lib/floorplan3d/modelLoader';
+import { PrimitiveFurniture } from '../../Lib/floorplan3d/primitiveFurniture';
 
 // مكون داخلي لتحميل النموذج داخل Suspense
 function FurnitureModelLoader({ type, position, size, rotation }) {

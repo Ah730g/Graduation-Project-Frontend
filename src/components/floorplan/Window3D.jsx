@@ -1,5 +1,5 @@
 import React from 'react';
-import { createWindowMaterial, createWallMaterial } from '../../lib/floorplan3d/materials';
+import { createWindowMaterial, createWallMaterial } from '../../Lib/floorplan3d/materials';
 import * as THREE from 'three';
 
 export default function Window3D({ position, size, rotation }) {

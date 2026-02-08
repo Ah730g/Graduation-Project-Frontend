@@ -3,7 +3,7 @@ import { createPortal } from 'react-dom';
 import FloorPlanSVG from '../pages/FloorPlanSVG';
 import FloorPlan3D from './floorplan/FloorPlan3D';
 import { useLanguage } from '../contexts/LanguageContext';
-import { convert2DTo3D } from '../lib/floorplan3d/converter';
+import { convert2DTo3D } from '../Lib/floorplan3d/converter';
 
 function FloorPlanDisplay({ 
   floorPlanData, 
