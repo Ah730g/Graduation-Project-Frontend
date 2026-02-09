@@ -192,17 +192,34 @@ const route = createBrowserRouter([
     ],
   },
   // Figma-safe routes - no auth, no redirects, for Figma plugin access
+  // These routes provide static pages with mock data for Figma conversion
   {
     path: "/figma",
     element: <FigmaLayout />,
     children: [
       {
-        path: "dashboard",
-        element: <AdminDashboard />,
+        path: "home",
+        element: <Home />,
+      },
+      {
+        path: "list",
+        element: <ListPage />,
+      },
+      {
+        path: "estate/:id",
+        element: <EstateInfo />,
+      },
+      {
+        path: "about",
+        element: <About />,
       },
       {
         path: "profile",
         element: <Profile />,
+      },
+      {
+        path: "profile/update",
+        element: <UpdateUser />,
       },
       {
         path: "add-post",
@@ -217,6 +234,10 @@ const route = createBrowserRouter([
         element: <Notifications />,
       },
       {
+        path: "payment",
+        element: <Payment />,
+      },
+      {
         path: "ratings",
         element: <Ratings />,
       },
@@ -227,6 +248,26 @@ const route = createBrowserRouter([
       {
         path: "support/create",
         element: <CreateTicket />,
+      },
+      {
+        path: "support/tickets/:id",
+        element: <TicketDetails />,
+      },
+      {
+        path: "identity-verification",
+        element: <IdentityVerification />,
+      },
+      {
+        path: "floor-plan/home",
+        element: <FloorPlanHome />,
+      },
+      {
+        path: "floor-plan",
+        element: <FloorPlanGenerator />,
+      },
+      {
+        path: "floor-plan/manual",
+        element: <FloorPlanManualBuilder />,
       },
     ],
   },
@@ -265,6 +306,10 @@ const route = createBrowserRouter([
       {
         path: "support/tickets",
         element: <AdminSupportTickets />,
+      },
+      {
+        path: "support/tickets/:id",
+        element: <AdminTicketDetails />,
       },
       {
         path: "reports",

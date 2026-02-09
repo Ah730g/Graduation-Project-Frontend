@@ -1,6 +1,7 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import AxiosClient from "../AxiosClient";
 import { FIGMA_MODE, getMockUser } from "../config/figmaMode";
+import { isFigmaRoute } from "../Lib/figmaMockData";
 
 const userContext = createContext({
   user: null,
@@ -27,16 +28,16 @@ export default function UserContextProvider({ children }) {
     }
   };
   
-  // In Figma mode, use mock data; otherwise use stored data
+  // In Figma mode or on /figma routes, use mock data; otherwise use stored data
   const getInitialUser = () => {
-    if (FIGMA_MODE) {
+    if (FIGMA_MODE || isFigmaRoute()) {
       return getMockUser();
     }
     return getUserFromStorage();
   };
   
   const getInitialToken = () => {
-    if (FIGMA_MODE) {
+    if (FIGMA_MODE || isFigmaRoute()) {
       return "mock_token_for_figma_preview";
     }
     return localStorage.getItem("ACCESS_TOKEN");
@@ -48,8 +49,8 @@ export default function UserContextProvider({ children }) {
   const [messageStatus, setMessageStatus] = useState(null);
   const setUser = (user) => {
     _setUser(user);
-    // Don't save to localStorage in Figma mode
-    if (!FIGMA_MODE) {
+    // Don't save to localStorage in Figma mode or on /figma routes
+    if (!FIGMA_MODE && !isFigmaRoute()) {
       if (user) localStorage.setItem("user", JSON.stringify(user));
       else localStorage.removeItem("user");
     }
@@ -61,8 +62,8 @@ export default function UserContextProvider({ children }) {
     }, 5000);
   };
   const setToken = (token) => {
-    // Don't save to localStorage in Figma mode
-    if (!FIGMA_MODE) {
+    // Don't save to localStorage in Figma mode or on /figma routes
+    if (!FIGMA_MODE && !isFigmaRoute()) {
       if (!token) localStorage.removeItem("ACCESS_TOKEN");
       else localStorage.setItem("ACCESS_TOKEN", token);
     }
@@ -70,10 +71,10 @@ export default function UserContextProvider({ children }) {
     _setToken(token);
   };
   const isAdmin = () => {
-    if (FIGMA_MODE) {
-      // In Figma mode, check if we're on admin routes
+    if (FIGMA_MODE || isFigmaRoute()) {
+      // In Figma mode or on /figma routes, check if we're on admin routes
       if (typeof window !== 'undefined') {
-        return window.location.pathname.startsWith('/admin');
+        return window.location.pathname.startsWith('/admin') || window.location.pathname.startsWith('/figma/admin');
       }
       return user && user.role === "admin";
     }
@@ -107,12 +108,12 @@ export default function UserContextProvider({ children }) {
     };
   }, []);
   
-  // Initialize and update user in Figma mode based on route
+  // Initialize and update user in Figma mode or on /figma routes based on route
   useEffect(() => {
-    if (FIGMA_MODE) {
+    if (FIGMA_MODE || isFigmaRoute()) {
       const mockUser = getMockUser();
       // Update user if route changed (admin vs user) or if user is not set
-      const isAdminRoute = typeof window !== 'undefined' && window.location.pathname.startsWith('/admin');
+      const isAdminRoute = typeof window !== 'undefined' && (window.location.pathname.startsWith('/admin') || window.location.pathname.startsWith('/figma/admin'));
       const shouldBeAdmin = isAdminRoute && mockUser.role === 'admin';
       const shouldBeUser = !isAdminRoute && mockUser.role !== 'admin';
       
@@ -123,9 +124,9 @@ export default function UserContextProvider({ children }) {
     }
   }, [FIGMA_MODE]);
 
-  // Listen to route changes in Figma mode
+  // Listen to route changes in Figma mode or on /figma routes
   useEffect(() => {
-    if (FIGMA_MODE && typeof window !== 'undefined') {
+    if ((FIGMA_MODE || isFigmaRoute()) && typeof window !== 'undefined') {
       const handleRouteChange = () => {
         const mockUser = getMockUser();
         if (user?.role !== mockUser.role) {
@@ -143,8 +144,8 @@ export default function UserContextProvider({ children }) {
   }, [FIGMA_MODE, user]);
 
   const refreshUser = async () => {
-    // In Figma mode, don't make API calls
-    if (FIGMA_MODE) {
+    // In Figma mode or on /figma routes, don't make API calls
+    if (FIGMA_MODE || isFigmaRoute()) {
       const mockUser = getMockUser();
       setUser(mockUser);
       return;

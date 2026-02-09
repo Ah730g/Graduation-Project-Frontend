@@ -39,7 +39,7 @@ export const MOCK_TOKEN = "mock_token_for_figma_preview";
 export const getMockUser = () => {
   if (typeof window !== 'undefined') {
     const path = window.location.pathname;
-    if (path.startsWith('/admin')) {
+    if (path.startsWith('/admin') || path.startsWith('/figma/admin')) {
       return MOCK_ADMIN;
     }
   }
