@@ -1,11 +1,13 @@
 import { Outlet, Navigate } from 'react-router-dom';
 import AdminSidebar from './AdminSidebar';
 import { useUserContext } from '../contexts/UserContext';
+import { FIGMA_MODE } from '../config/figmaMode';
 
 function AdminLayout() {
   const { user, isAdmin } = useUserContext();
 
-  if (!user || !isAdmin()) {
+  // In Figma mode, allow access without authentication
+  if (!FIGMA_MODE && (!user || !isAdmin())) {
     return <Navigate to="/" replace />;
   }
 

@@ -51,7 +51,7 @@ function Navbar() {
       setUnreadCount(0);
       return;
     }
-    
+
     AxiosClient.get('/notifications/unread-count')
       .then((response) => {
         setUnreadCount(response.data.count || 0);
@@ -85,7 +85,7 @@ function Navbar() {
       setUser(null);
       setUnreadCount(0);
     };
-    
+
     window.addEventListener('auth:logout', handleLogout);
     return () => window.removeEventListener('auth:logout', handleLogout);
   }, [setToken, setUser]);
@@ -124,13 +124,17 @@ function Navbar() {
             to="/"
           >
             <img src="/public/logo.png" alt="" className="w-7" />
-            <span className="max-lg:hidden max-md:block">{t('navbar.siteName')}</span>
+            <span className="max-lg:hidden max-md:block">
+              {t('navbar.siteName')}
+            </span>
           </Link>
           {user && (
             <Link
               href="#"
               className={`hover:scale-105 transition duration-300 ease rounded-md max-md:hidden dark:text-gray-200 ${
-                location.pathname === '/' ? 'bg-yellow-300 dark:bg-yellow-400 text-[#444] dark:text-gray-900 px-3 py-1 font-bold rounded-md' : ''
+                location.pathname === '/'
+                  ? 'bg-yellow-300 dark:bg-yellow-400 text-[#444] dark:text-gray-900 px-3 py-1 font-bold rounded-md'
+                  : ''
               }`}
               to="/"
             >
@@ -141,7 +145,11 @@ function Navbar() {
             <button
               onClick={() => setLanguage(language === 'en' ? 'ar' : 'en')}
               className="bg-yellow-300 dark:bg-yellow-400 hover:scale-105 px-4 py-2 rounded-md font-bold transition duration-300 ease text-[#444] dark:text-gray-900 flex items-center gap-2"
-              title={language === 'en' ? 'Switch to Arabic' : 'التبديل إلى الإنجليزية'}
+              title={
+                language === 'en'
+                  ? 'Switch to Arabic'
+                  : 'التبديل إلى الإنجليزية'
+              }
             >
               <span>🌐</span>
               <span>{language === 'en' ? 'عربي' : 'English'}</span>
@@ -151,7 +159,9 @@ function Navbar() {
             <Link
               href="#"
               className={`hover:scale-105 transition duration-300 ease rounded-md max-md:hidden dark:text-gray-200 ${
-                location.pathname === '/about' ? 'bg-yellow-300 dark:bg-yellow-400 text-[#444] dark:text-gray-900 px-3 py-1 font-bold rounded-md' : ''
+                location.pathname === '/about'
+                  ? 'bg-yellow-300 dark:bg-yellow-400 text-[#444] dark:text-gray-900 px-3 py-1 font-bold rounded-md'
+                  : ''
               }`}
               to="/about"
             >
@@ -162,8 +172,10 @@ function Navbar() {
             <Link
               to="/booking-requests"
               className={`hover:scale-105 transition duration-300 ease rounded-md max-md:hidden dark:text-gray-200 ${
-                location.pathname === '/booking-requests' || location.pathname.startsWith('/contracts/') 
-                  ? 'bg-yellow-300 dark:bg-yellow-400 text-[#444] dark:text-gray-900 px-3 py-1 font-bold rounded-md' : ''
+                location.pathname === '/booking-requests' ||
+                location.pathname.startsWith('/contracts/')
+                  ? 'bg-yellow-300 dark:bg-yellow-400 text-[#444] dark:text-gray-900 px-3 py-1 font-bold rounded-md'
+                  : ''
               }`}
             >
               {t('navbar.bookingRequests')}
@@ -173,8 +185,9 @@ function Navbar() {
             <Link
               to="/ratings"
               className={`hover:scale-105 transition duration-300 ease rounded-md max-md:hidden dark:text-gray-200 ${
-                location.pathname === '/ratings' 
-                  ? 'bg-yellow-300 dark:bg-yellow-400 text-[#444] dark:text-gray-900 px-3 py-1 font-bold rounded-md' : ''
+                location.pathname === '/ratings'
+                  ? 'bg-yellow-300 dark:bg-yellow-400 text-[#444] dark:text-gray-900 px-3 py-1 font-bold rounded-md'
+                  : ''
               }`}
             >
               {t('navbar.ratings') || 'Ratings'}
@@ -184,8 +197,9 @@ function Navbar() {
             <Link
               to="/support/tickets"
               className={`hover:scale-105 transition duration-300 ease rounded-md max-md:hidden dark:text-gray-200 ${
-                location.pathname.startsWith('/support') 
-                  ? 'bg-yellow-300 dark:bg-yellow-400 text-[#444] dark:text-gray-900 px-3 py-1 font-bold rounded-md' : ''
+                location.pathname.startsWith('/support')
+                  ? 'bg-yellow-300 dark:bg-yellow-400 text-[#444] dark:text-gray-900 px-3 py-1 font-bold rounded-md'
+                  : ''
               }`}
             >
               {t('support.tickets') || 'Support'}
@@ -195,8 +209,9 @@ function Navbar() {
             <Link
               to="/admin/dashboard"
               className={`px-4 py-2 hover:scale-105 transition duration-300 ease rounded-md max-md:hidden font-bold ${
-                location.pathname.startsWith('/admin') 
-                  ? 'bg-yellow-400 dark:bg-yellow-500 text-[#444] dark:text-gray-900' : 'bg-yellow-300 dark:bg-yellow-400 text-[#444] dark:text-gray-900'
+                location.pathname.startsWith('/admin')
+                  ? 'bg-yellow-400 dark:bg-yellow-500 text-[#444] dark:text-gray-900'
+                  : 'bg-yellow-300 dark:bg-yellow-400 text-[#444] dark:text-gray-900'
               }`}
             >
               Admin
@@ -213,8 +228,9 @@ function Navbar() {
               <Link
                 to="/notifications"
                 className={`hover:scale-105 transition duration-300 ease rounded-md max-md:hidden relative dark:text-gray-200 p-2 ${
-                  location.pathname === '/notifications' 
-                    ? 'bg-yellow-300 dark:bg-yellow-400 text-[#444] dark:text-gray-900' : 'hover:bg-gray-100 dark:hover:bg-gray-700'
+                  location.pathname === '/notifications'
+                    ? 'bg-yellow-300 dark:bg-yellow-400 text-[#444] dark:text-gray-900'
+                    : 'hover:bg-gray-100 dark:hover:bg-gray-700'
                 }`}
               >
                 <span className="text-2xl">🔔</span>
@@ -224,7 +240,7 @@ function Navbar() {
                   </span>
                 )}
               </Link>
-              
+
               {/* Profile Dropdown */}
               <div className="relative z-[9999]" ref={dropdownRef}>
                 <button
@@ -237,7 +253,9 @@ function Navbar() {
                     className="w-10 h-10 rounded-full object-cover border-2 border-yellow-300 dark:border-yellow-400"
                   />
                   {user?.name && (
-                    <span className="font-bold max-md:hidden dark:text-white text-sm">{user.name}</span>
+                    <span className="font-bold max-md:hidden dark:text-white text-sm">
+                      {user.name}
+                    </span>
                   )}
                   <svg
                     className={`w-4 h-4 transition-transform duration-300 dark:text-gray-200 ${profileDropdown ? 'rotate-180' : ''}`}
@@ -245,91 +263,109 @@ function Navbar() {
                     stroke="currentColor"
                     viewBox="0 0 24 24"
                   >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
                   </svg>
                 </button>
-              
-              {profileDropdown && (
-                <div className={`absolute top-full mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 z-[10000] overflow-hidden ${
-                  language === 'ar' ? 'left-0' : 'right-0'
-                }`}>
-                  <div className="py-1">
-                    <Link
-                      to="/user/profile"
-                      onClick={() => setProfileDropdown(false)}
-                      className={`block px-4 py-2 text-sm text-[#444] dark:text-gray-200 hover:bg-yellow-300 dark:hover:bg-yellow-600 transition duration-300 ease ${
-                        language === 'ar' ? 'text-right' : 'text-left'
-                      }`}
-                    >
-                      {t('navbar.profile')}
-                    </Link>
-                    
-                    {/* Settings Section */}
-                    <div className="border-t border-gray-200 dark:border-gray-700 my-1"></div>
-                    <button
-                      onClick={() => setSettingsOpen(!settingsOpen)}
-                      className={`block w-full px-4 py-2 text-sm text-[#444] dark:text-gray-200 hover:bg-yellow-300 dark:hover:bg-yellow-600 transition duration-300 ease ${
-                        language === 'ar' ? 'text-right' : 'text-left'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <span>{t('navbar.settings') || 'Settings'}</span>
-                        <svg
-                          className={`w-4 h-4 transition-transform duration-300 ${settingsOpen ? 'rotate-180' : ''}`}
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                        </svg>
-                      </div>
-                    </button>
-                    
-                    {/* Settings Submenu */}
-                    {settingsOpen && (
-                      <div className="bg-gray-50 dark:bg-gray-900/50 pl-4 border-l-2 border-yellow-300 dark:border-yellow-400">
-                        {/* Dark Mode Toggle */}
-                        <button
-                          onClick={toggleDarkMode}
-                          className={`block w-full px-4 py-2 text-sm text-[#444] dark:text-gray-200 hover:bg-yellow-300 dark:hover:bg-yellow-600 transition duration-300 ease ${
-                            language === 'ar' ? 'text-right' : 'text-left'
-                          }`}
-                        >
-                          <div className="flex items-center justify-between">
-                            <span>{t('navbar.darkMode') || 'Dark Mode'}</span>
-                            <span className="text-lg">{darkMode ? '☀️' : '🌙'}</span>
-                          </div>
-                        </button>
-                        
-                        {/* Language Toggle */}
-                        <button
-                          onClick={() => setLanguage(language === 'en' ? 'ar' : 'en')}
-                          className={`block w-full px-4 py-2 text-sm text-[#444] dark:text-gray-200 hover:bg-yellow-300 dark:hover:bg-yellow-600 transition duration-300 ease ${
-                            language === 'ar' ? 'text-right' : 'text-left'
-                          }`}
-                        >
-                          <div className="flex items-center justify-between">
-                            <span>{t('navbar.language') || 'Language'}</span>
-                            <span className="font-semibold">{language === 'en' ? 'عربي' : 'English'}</span>
-                          </div>
-                        </button>
-                      </div>
-                    )}
-                    
-                    <div className="border-t border-gray-200 dark:border-gray-700 my-1"></div>
-                    
-                    {/* Logout */}
-                    <button
-                      onClick={handleLogout}
-                      className={`block w-full px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900 transition duration-300 ease ${
-                        language === 'ar' ? 'text-right' : 'text-left'
-                      }`}
-                    >
-                      {t('navbar.logout')}
-                    </button>
+
+                {profileDropdown && (
+                  <div
+                    className={`absolute top-full mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700 z-[10000] overflow-hidden ${
+                      language === 'ar' ? 'left-0' : 'right-0'
+                    }`}
+                  >
+                    <div className="py-1">
+                      <Link
+                        to="/user/profile"
+                        onClick={() => setProfileDropdown(false)}
+                        className={`block px-4 py-2 text-sm text-[#444] dark:text-gray-200 hover:bg-yellow-300 dark:hover:bg-yellow-600 transition duration-300 ease ${
+                          language === 'ar' ? 'text-right' : 'text-left'
+                        }`}
+                      >
+                        {t('navbar.profile')}
+                      </Link>
+
+                      {/* Settings Section */}
+                      <div className="border-t border-gray-200 dark:border-gray-700 my-1"></div>
+                      <button
+                        onClick={() => setSettingsOpen(!settingsOpen)}
+                        className={`block w-full px-4 py-2 text-sm text-[#444] dark:text-gray-200 hover:bg-yellow-300 dark:hover:bg-yellow-600 transition duration-300 ease ${
+                          language === 'ar' ? 'text-right' : 'text-left'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span>{t('navbar.settings') || 'Settings'}</span>
+                          <svg
+                            className={`w-4 h-4 transition-transform duration-300 ${settingsOpen ? 'rotate-180' : ''}`}
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M19 9l-7 7-7-7"
+                            />
+                          </svg>
+                        </div>
+                      </button>
+
+                      {/* Settings Submenu */}
+                      {settingsOpen && (
+                        <div className="bg-gray-50 dark:bg-gray-900/50 pl-4 border-l-2 border-yellow-300 dark:border-yellow-400">
+                          {/* Dark Mode Toggle */}
+                          <button
+                            onClick={toggleDarkMode}
+                            className={`block w-full px-4 py-2 text-sm text-[#444] dark:text-gray-200 hover:bg-yellow-300 dark:hover:bg-yellow-600 transition duration-300 ease ${
+                              language === 'ar' ? 'text-right' : 'text-left'
+                            }`}
+                          >
+                            <div className="flex items-center justify-between">
+                              <span>{t('navbar.darkMode') || 'Dark Mode'}</span>
+                              <span className="text-lg">
+                                {darkMode ? '☀️' : '🌙'}
+                              </span>
+                            </div>
+                          </button>
+
+                          {/* Language Toggle */}
+                          <button
+                            onClick={() =>
+                              setLanguage(language === 'en' ? 'ar' : 'en')
+                            }
+                            className={`block w-full px-4 py-2 text-sm text-[#444] dark:text-gray-200 hover:bg-yellow-300 dark:hover:bg-yellow-600 transition duration-300 ease ${
+                              language === 'ar' ? 'text-right' : 'text-left'
+                            }`}
+                          >
+                            <div className="flex items-center justify-between">
+                              <span>{t('navbar.language') || 'Language'}</span>
+                              <span className="font-semibold">
+                                {language === 'en' ? 'عربي' : 'English'}
+                              </span>
+                            </div>
+                          </button>
+                        </div>
+                      )}
+
+                      <div className="border-t border-gray-200 dark:border-gray-700 my-1"></div>
+
+                      {/* Logout */}
+                      <button
+                        onClick={handleLogout}
+                        className={`block w-full px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900 transition duration-300 ease ${
+                          language === 'ar' ? 'text-right' : 'text-left'
+                        }`}
+                      >
+                        {t('navbar.logout')}
+                      </button>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
               </div>
             </div>
           ) : (
@@ -337,7 +373,9 @@ function Navbar() {
               <Link
                 href="#"
                 className={`hover:scale-105 transition duration-300 ease rounded-md max-md:hidden dark:text-gray-200 ${
-                  location.pathname === '/login' ? 'bg-yellow-300 dark:bg-yellow-400 text-[#444] dark:text-gray-900 px-3 py-1 font-bold rounded-md' : ''
+                  location.pathname === '/login'
+                    ? 'bg-yellow-300 dark:bg-yellow-400 text-[#444] dark:text-gray-900 px-3 py-1 font-bold rounded-md'
+                    : ''
                 }`}
                 to="/login"
               >
@@ -346,12 +384,10 @@ function Navbar() {
               <Link
                 href="#"
                 className={`px-4 py-2 hover:scale-105 transition duration-300 ease rounded-md max-md:hidden font-bold dark:text-gray-200 ${
-                  location.pathname === '/signup' 
-                    ? 'bg-yellow-300 dark:bg-yellow-400 text-[#444] dark:text-gray-900' 
+                  location.pathname === '/signup'
+                    ? 'bg-yellow-300 dark:bg-yellow-400 text-[#444] dark:text-gray-900'
                     : ''
-                } ${
-                  language === 'ar' ? 'ml-2' : 'mr-2'
-                }`}
+                } ${language === 'ar' ? 'ml-2' : 'mr-2'}`}
                 to="/signup"
               >
                 {t('navbar.signup')}

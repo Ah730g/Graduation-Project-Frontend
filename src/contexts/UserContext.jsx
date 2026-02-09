@@ -1,5 +1,6 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import AxiosClient from "../AxiosClient";
+import { FIGMA_MODE, getMockUser } from "../config/figmaMode";
 
 const userContext = createContext({
   user: null,
@@ -26,14 +27,32 @@ export default function UserContextProvider({ children }) {
     }
   };
   
-  const [user, _setUser] = useState(getUserFromStorage());
-  const [token, _setToken] = useState(localStorage.getItem("ACCESS_TOKEN"));
+  // In Figma mode, use mock data; otherwise use stored data
+  const getInitialUser = () => {
+    if (FIGMA_MODE) {
+      return getMockUser();
+    }
+    return getUserFromStorage();
+  };
+  
+  const getInitialToken = () => {
+    if (FIGMA_MODE) {
+      return "mock_token_for_figma_preview";
+    }
+    return localStorage.getItem("ACCESS_TOKEN");
+  };
+  
+  const [user, _setUser] = useState(getInitialUser());
+  const [token, _setToken] = useState(getInitialToken());
   const [message, _setMessage] = useState(null);
   const [messageStatus, setMessageStatus] = useState(null);
   const setUser = (user) => {
     _setUser(user);
-    if (user) localStorage.setItem("user", JSON.stringify(user));
-    else localStorage.removeItem("user");
+    // Don't save to localStorage in Figma mode
+    if (!FIGMA_MODE) {
+      if (user) localStorage.setItem("user", JSON.stringify(user));
+      else localStorage.removeItem("user");
+    }
   };
   const setMessage = (message) => {
     _setMessage(message);
@@ -42,12 +61,22 @@ export default function UserContextProvider({ children }) {
     }, 5000);
   };
   const setToken = (token) => {
-    if (!token) localStorage.removeItem("ACCESS_TOKEN");
-    else localStorage.setItem("ACCESS_TOKEN", token);
+    // Don't save to localStorage in Figma mode
+    if (!FIGMA_MODE) {
+      if (!token) localStorage.removeItem("ACCESS_TOKEN");
+      else localStorage.setItem("ACCESS_TOKEN", token);
+    }
 
     _setToken(token);
   };
   const isAdmin = () => {
+    if (FIGMA_MODE) {
+      // In Figma mode, check if we're on admin routes
+      if (typeof window !== 'undefined') {
+        return window.location.pathname.startsWith('/admin');
+      }
+      return user && user.role === "admin";
+    }
     return user && user.role === "admin";
   };
   // Listen for auth logout events from AxiosClient interceptor
@@ -77,8 +106,50 @@ export default function UserContextProvider({ children }) {
       window.removeEventListener('auth:disabled', handleAuthDisabled);
     };
   }, []);
+  
+  // Initialize and update user in Figma mode based on route
+  useEffect(() => {
+    if (FIGMA_MODE) {
+      const mockUser = getMockUser();
+      // Update user if route changed (admin vs user) or if user is not set
+      const isAdminRoute = typeof window !== 'undefined' && window.location.pathname.startsWith('/admin');
+      const shouldBeAdmin = isAdminRoute && mockUser.role === 'admin';
+      const shouldBeUser = !isAdminRoute && mockUser.role !== 'admin';
+      
+      if (!user || shouldBeAdmin || shouldBeUser || user.role !== mockUser.role) {
+        _setUser(mockUser);
+        _setToken("mock_token_for_figma_preview");
+      }
+    }
+  }, [FIGMA_MODE]);
+
+  // Listen to route changes in Figma mode
+  useEffect(() => {
+    if (FIGMA_MODE && typeof window !== 'undefined') {
+      const handleRouteChange = () => {
+        const mockUser = getMockUser();
+        if (user?.role !== mockUser.role) {
+          _setUser(mockUser);
+        }
+      };
+      
+      // Listen to popstate (back/forward navigation)
+      window.addEventListener('popstate', handleRouteChange);
+      
+      return () => {
+        window.removeEventListener('popstate', handleRouteChange);
+      };
+    }
+  }, [FIGMA_MODE, user]);
 
   const refreshUser = async () => {
+    // In Figma mode, don't make API calls
+    if (FIGMA_MODE) {
+      const mockUser = getMockUser();
+      setUser(mockUser);
+      return;
+    }
+    
     if (token) {
       try {
         const response = await AxiosClient.get("/user");
@@ -109,6 +180,7 @@ export default function UserContextProvider({ children }) {
       }
     }
   };
+  
   const values = {
     user,
     setUser,

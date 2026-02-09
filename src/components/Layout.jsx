@@ -2,6 +2,7 @@ import Navbar from "./Navbar";
 import { Navigate, Outlet } from "react-router-dom";
 import AxiosClient from "../AxiosClient";
 import { useUserContext } from "../contexts/UserContext";
+import { FIGMA_MODE } from "../config/figmaMode";
 
 function Layout() {
   return (
@@ -14,7 +15,8 @@ function Layout() {
 
 function AuthLayout() {
   const { token } = useUserContext();
-  if (!token) return <Navigate to="/login" />;
+  // In Figma mode, allow access without authentication
+  if (!FIGMA_MODE && !token) return <Navigate to="/login" />;
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       <Navbar />
