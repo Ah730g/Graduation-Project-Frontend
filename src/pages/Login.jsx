@@ -54,9 +54,13 @@ function Login() {
           } else {
             setErrors({ message: [response.data?.message || 'An error occurred'] });
           }
+        } else if (error.request) {
+          // Request was made but no response received (connection error)
+          const baseURL = import.meta.env.VITE_BASE_API_URL || 'http://localhost:8000';
+          setErrors({ message: [`Unable to connect to server. Please make sure the backend server is running at ${baseURL}`] });
         } else {
-          // Network error or no response
-          setErrors({ message: ['Network error. Please check your connection.'] });
+          // Network error or other error
+          setErrors({ message: [error.message || 'Network error. Please check your connection.'] });
         }
       });
   };

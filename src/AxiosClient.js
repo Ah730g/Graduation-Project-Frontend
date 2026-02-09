@@ -1,8 +1,19 @@
 import axios from 'axios';
 import { FIGMA_MODE } from './config/figmaMode';
 
+// Get base URL with fallback
+const getBaseURL = () => {
+  const apiUrl = import.meta.env.VITE_BASE_API_URL;
+  if (!apiUrl) {
+    console.warn('VITE_BASE_API_URL is not set. Using default: http://localhost:8000');
+    return 'http://localhost:8000/api';
+  }
+  return `${apiUrl}/api`;
+};
+
 const AxiosClient = axios.create({
-  baseURL: `${import.meta.env.VITE_BASE_API_URL}/api`,
+  baseURL: getBaseURL(),
+  timeout: 30000, // 30 seconds timeout
 });
 
 // Request interceptor - add token to headers
@@ -23,14 +34,38 @@ AxiosClient.interceptors.request.use((config) => {
 AxiosClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    // In Figma mode, suppress auth errors to prevent redirects
-    if (FIGMA_MODE) {
-      // Return a mock successful response for common GET requests
-      if (error.config?.method === 'get') {
-        console.log('[Figma Mode] Suppressed API error:', error.config.url);
-        return Promise.resolve({ data: null, status: 200 });
+    // Check if this is a network/connection error (no response from server)
+    const isNetworkError = !error.response && (error.code === 'ECONNREFUSED' || error.code === 'ERR_NETWORK' || error.message?.includes('Network Error') || error.message?.includes('Unable to connect'));
+    
+    // In Figma mode, only suppress authentication errors, not connection errors
+    if (FIGMA_MODE && !isNetworkError) {
+      // Only suppress auth-related errors (401, 403)
+      if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+        // Return a mock successful response for GET requests to prevent redirects
+        if (error.config?.method === 'get') {
+          console.log('[Figma Mode] Suppressed auth error:', error.config.url);
+          return Promise.resolve({ data: null, status: 200 });
+        }
+        // For other methods, just reject silently
+        return Promise.reject(error);
       }
-      // For other methods, just reject silently
+      // For non-auth errors in Figma mode, let them pass through
+      return Promise.reject(error);
+    }
+    
+    // If it's a network error, show the actual error (even in Figma mode)
+    if (isNetworkError) {
+      const baseURL = import.meta.env.VITE_BASE_API_URL || 'http://localhost:8000';
+      console.error('Network Error:', {
+        message: error.message,
+        code: error.code,
+        baseURL: baseURL,
+        fullURL: `${baseURL}/api${error.config?.url || ''}`
+      });
+      // Enhance error message with base URL info
+      if (!error.message || error.message === 'Network Error') {
+        error.message = `Unable to connect to server at ${baseURL}. Please make sure the backend server is running.`;
+      }
       return Promise.reject(error);
     }
     
