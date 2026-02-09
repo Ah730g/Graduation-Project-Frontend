@@ -37,14 +37,41 @@ AxiosClient.interceptors.response.use(
     // Check if this is a network/connection error (no response from server)
     const isNetworkError = !error.response && (error.code === 'ECONNREFUSED' || error.code === 'ERR_NETWORK' || error.message?.includes('Network Error') || error.message?.includes('Unable to connect'));
     
-    // In Figma mode, only suppress authentication errors, not connection errors
+    // In Figma mode, provide mock responses for failed API calls
     if (FIGMA_MODE && !isNetworkError) {
-      // Only suppress auth-related errors (401, 403)
+      // Only suppress auth-related errors (401, 403) and provide mock data
       if (error.response && (error.response.status === 401 || error.response.status === 403)) {
         // Return a mock successful response for GET requests to prevent redirects
         if (error.config?.method === 'get') {
-          console.log('[Figma Mode] Suppressed auth error:', error.config.url);
-          return Promise.resolve({ data: null, status: 200 });
+          console.log('[Figma Mode] Suppressed auth error, returning mock data:', error.config.url);
+          
+          // Provide appropriate mock data based on endpoint
+          const url = error.config.url || '';
+          let mockData = null;
+          
+          if (url.includes('/user')) {
+            mockData = { id: 1, name: 'Demo User', email: 'demo@example.com', role: 'tenant', status: 'active' };
+          } else if (url.includes('/admin/dashboard')) {
+            mockData = { total_users: 0, total_apartments: 0, total_rental_requests: 0, total_contracts: 0 };
+          } else if (url.includes('/admin/')) {
+            mockData = { data: [], meta: { current_page: 1, per_page: 15, total: 0, last_page: 1 } };
+          } else if (url.includes('/booking-requests')) {
+            mockData = [];
+          } else if (url.includes('/notifications')) {
+            mockData = [];
+          } else if (url.includes('/reviews')) {
+            mockData = [];
+          } else if (url.includes('/support/tickets')) {
+            mockData = [];
+          } else if (url.includes('/contracts')) {
+            mockData = [];
+          } else if (url.includes('/reputation')) {
+            mockData = { reputation: 0, total_reviews: 0, average_rating: 0 };
+          } else {
+            mockData = null;
+          }
+          
+          return Promise.resolve({ data: mockData, status: 200 });
         }
         // For other methods, just reject silently
         return Promise.reject(error);

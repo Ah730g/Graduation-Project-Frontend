@@ -31,8 +31,13 @@ function Ratings() {
       })
       .catch((error) => {
         console.error('Error fetching eligible contracts:', error);
-        showToast(t('rating.errorLoading') || 'Error loading contracts', 'error');
+        // Set empty array on error to prevent UI crash
+        setEligibleContracts([]);
         setLoading(false);
+        // Only show toast if not in Figma mode
+        if (!import.meta.env.VITE_FIGMA_MODE) {
+          showToast(t('rating.errorLoading') || 'Error loading contracts', 'error');
+        }
       });
   };
 

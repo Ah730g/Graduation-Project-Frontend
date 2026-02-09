@@ -11,11 +11,23 @@ function AdminDashboard() {
   useEffect(() => {
     AxiosClient.get('/admin/dashboard')
       .then((response) => {
-        setStats(response.data);
+        setStats(response.data || {
+          total_users: 0,
+          total_apartments: 0,
+          total_rental_requests: 0,
+          total_contracts: 0,
+        });
         setLoading(false);
       })
       .catch((error) => {
         console.error('Error fetching dashboard stats:', error);
+        // Set default stats on error to prevent UI crash
+        setStats({
+          total_users: 0,
+          total_apartments: 0,
+          total_rental_requests: 0,
+          total_contracts: 0,
+        });
         setLoading(false);
       });
   }, []);

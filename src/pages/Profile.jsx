@@ -18,12 +18,14 @@ function Profile() {
   }, [user]);
 
   const fetchReputation = () => {
-    AxiosClient.get(`/users/${user.id}/reputation`)
+    AxiosClient.get(`/users/${user?.id || 1}/reputation`)
       .then((response) => {
-        setReputation(response.data);
+        setReputation(response.data || { reputation: 0, total_reviews: 0, average_rating: 0 });
       })
       .catch((error) => {
         console.error('Error fetching reputation:', error);
+        // Set default reputation on error
+        setReputation({ reputation: 0, total_reviews: 0, average_rating: 0 });
       });
   };
 

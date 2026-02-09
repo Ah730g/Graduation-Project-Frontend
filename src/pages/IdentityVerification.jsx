@@ -34,8 +34,8 @@ function IdentityVerification() {
     // Fetch current verification status
     AxiosClient.get('/identity-verification')
       .then(async (response) => {
-        const status = response.data.identity_status || user?.identity_status || 'none';
-        setVerification(response.data.verification);
+        const status = response.data?.identity_status || user?.identity_status || 'none';
+        setVerification(response.data?.verification || null);
         setIdentityStatus(status);
         if (status === 'approved') {
           await refreshUser();
@@ -45,6 +45,7 @@ function IdentityVerification() {
         console.error('Error fetching verification:', error);
         // If API fails, use user's identity_status or default to 'none'
         setIdentityStatus(user?.identity_status || 'none');
+        setVerification(null);
       })
       .finally(() => {
         setLoading(false);

@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import { Layout, AuthLayout } from "./components/Layout";
 import AdminLayout from "./components/AdminLayout";
+import FigmaLayout, { FigmaAdminLayout } from "./components/FigmaLayout";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import ListPage from "./pages/ListPage";
@@ -183,6 +184,87 @@ const route = createBrowserRouter([
       {
         path: "support/tickets/:id",
         element: <AdminTicketDetails />,
+      },
+      {
+        path: "reports",
+        element: <AdminReports />,
+      },
+    ],
+  },
+  // Figma-safe routes - no auth, no redirects, for Figma plugin access
+  {
+    path: "/figma",
+    element: <FigmaLayout />,
+    children: [
+      {
+        path: "dashboard",
+        element: <AdminDashboard />,
+      },
+      {
+        path: "profile",
+        element: <Profile />,
+      },
+      {
+        path: "add-post",
+        element: <AddPost />,
+      },
+      {
+        path: "booking-requests",
+        element: <BookingRequests />,
+      },
+      {
+        path: "notifications",
+        element: <Notifications />,
+      },
+      {
+        path: "ratings",
+        element: <Ratings />,
+      },
+      {
+        path: "support/tickets",
+        element: <SupportTickets />,
+      },
+      {
+        path: "support/create",
+        element: <CreateTicket />,
+      },
+    ],
+  },
+  {
+    path: "/figma/admin",
+    element: <FigmaAdminLayout />,
+    children: [
+      {
+        path: "dashboard",
+        element: <AdminDashboard />,
+      },
+      {
+        path: "users",
+        element: <UserManagement />,
+      },
+      {
+        path: "apartments",
+        element: <ApartmentManagement />,
+      },
+      {
+        path: "rental-requests",
+        element: <RentalRequestsManagement />,
+      },
+      {
+        path: "contracts",
+        element: <ContractManagement />,
+      },
+      {
+        path: "reviews",
+        element: <ReviewsManagement />,
+      },
+      {
+        path: "identity-verifications",
+        element: <IdentityVerificationReview />,
+      },
+      {
+        path: "support/tickets",
+        element: <AdminSupportTickets />,
       },
       {
         path: "reports",
